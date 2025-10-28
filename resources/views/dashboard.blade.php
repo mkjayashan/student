@@ -1,12 +1,11 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home</title>
-</head>
-<body>
-<h2>Welcome codeXpress</h2>
+  @include('component.head')
+  @include('component.navbar')
+  <div class="container">
+      <div class="row">
+          <div class="col-6">
+              <h2>CodeXpress</h2>
+          </div>
+      </div>
+  </div>
 
-</body>
-</html>
+@include('component.script')
