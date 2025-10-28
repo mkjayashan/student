@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('reg_no');
             $table->string('name');
-            $table->string('address');
+            $table->string('email');
+            $table->string('ph_no');
             $table->date('dob');
-            $table->integer('age');
-            $table->double('weight');
+            $table->string('password');
             $table->timestamps();
         });
     }

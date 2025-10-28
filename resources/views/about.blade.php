@@ -1,13 +1,12 @@
+@extends('app')
+@push('title')
+    about us
+@endpush
+@push('nav_brand')
+    Sri Lanka
+@endpush
+@section('content')
+    <h1>About Us</h1>
+@endsection
 
-@include('component.navbar')
-@include('component.head')
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <h2>
-                About Us
-            </h2>
-        </div>
-    </div>
-</div>
-@include('component.script')
+
