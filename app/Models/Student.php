@@ -16,4 +16,8 @@ class Student extends Model
         'dob',
         'password',
     ];
+
+
+
+
 }
