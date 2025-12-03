@@ -89,21 +89,11 @@ public function update(Request $request){
        }
     }
 
-   /* public function search(Request $request)
-    {
-        try {
-            $keyword = $request->input('search');
 
-            $students = Student::query()
-                ->where('name', 'like', "%{$keyword}%")
-                ->orWhere('reg_no', 'like', "%{$keyword}%")
-                ->orWhere('email', 'like', "%{$keyword}%")
-                ->get();
 
-            return response()->json($students);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }*/
+
+
+
+
 
 }

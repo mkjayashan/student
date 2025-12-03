@@ -1,4 +1,4 @@
-@extends('app')
+@extends('layouts.app')
 
 @section('content')
     <!--begin::Row-->
@@ -131,7 +131,9 @@
         <div class="col-lg-7 connectedSortable">
             <div class="card mb-4">
                 <div class="card-header"><h3 class="card-title">Sales Value</h3></div>
-                <div class="card-body"><div id="revenue-chart"></div></div>
+                <div class="card-body">
+                    <div id="revenue-chart"></div>
+                </div>
             </div>
             <!-- /.card -->
             <!-- DIRECT CHAT -->
@@ -388,7 +390,9 @@
                         </button>
                     </div>
                 </div>
-                <div class="card-body"><div id="world-map" style="height: 220px"></div></div>
+                <div class="card-body">
+                    <div id="world-map" style="height: 220px"></div>
+                </div>
                 <div class="card-footer border-0">
                     <!--begin::Row-->
                     <div class="row">

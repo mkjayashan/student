@@ -1,9 +1,9 @@
 @extends('layouts.app')
 @push('title')
-    Student Register
+    Create Subject
 @endpush
 @push("page_header_title")
-    Student Register
+    Create subject
 @endpush
 @section('content')
     <div class="container-fluid">
@@ -11,7 +11,7 @@
             <div class="col-10">
 
 
-                @livewire('student-register-form')
+                @livewire('create-subject')
 
 
             </div>
