@@ -1,18 +1,17 @@
 @extends('layouts.app')
 @push('title')
-    Student List
+    Subject
 @endpush
 @push('nav_brand')
     LMS
 @endpush
 @section('content')
     @push('page_header_title')
-        Student
+        Subject
     @endpush
 
-
-    @livewire('student-register-form')
-    @livewire('student-list-table')
+    @livewire('create-subject')
+    @livewire('subject-list')
 
 @endsection
 

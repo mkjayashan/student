@@ -49,14 +49,24 @@
                         <p>Teacher</p>
                     </a>
                 <li class="nav-item">
-                    <a href="" class="nav-link">
+                    <a href="{{route('course.index')}}" class="nav-link">
                         <i class="nav-icon bi bi-palette"></i>
                         <p>Courses</p>
                     </a>
                 <li class="nav-item">
-                    <a href="" class="nav-link">
+                    <a href="{{route('subject.index')}}" class="nav-link">
                         <i class="nav-icon bi bi-palette"></i>
                         <p>Subjects</p>
+                    </a>
+                <li class="nav-item">
+                    <a href="{{route('class.index')}}" class="nav-link">
+                        <i class="nav-icon bi bi-palette"></i>
+                        <p>Class</p>
+                    </a>
+                <li class="nav-item">
+                    <a href="{{route('grade.index')}}" class="nav-link">
+                        <i class="nav-icon bi bi-palette"></i>
+                        <p>Grade</p>
                     </a>
 
 

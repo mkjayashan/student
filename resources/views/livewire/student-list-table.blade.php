@@ -3,8 +3,8 @@
 
         <div class="row">
             <div class="col-6">
-                <input type="text" id="search" class="form-control"
-                       placeholder="Search by name, reg no, or email">
+                 <input type="search" id="studentSearch" class="form-control " placeholder="search" />
+
             </div>
             <!-- Add Student Button -->
             <div class="col-2">
@@ -104,9 +104,7 @@
                                                 </form>
 
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-primary">Save changes</button>
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -162,35 +160,16 @@
         </script>
 
 
+
+
+
     @endpush
 
-    {{--<table class="table">
-        <thead>
-        <tr>
-            <th scope="col">Register_no</th>
-            <th scope="col">Full Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Phone</th>
-            <th scope="col">Date Of Birth</th>
-
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($students as $student)
-            <tr>
-
-                <th scope="row">{{$student->reg_no}}</th>
-                <td>{{$student->name}}</td>
-                <td>{{$student->email}}</td>
-                <td>{{$student->ph_no}}</td>
-                <td>{{$student->dob}}</td>
 
 
-            </tr>
-        @endforeach
 
 
-        </tbody>
-    </table>--}}
+
+
 </div>
 
