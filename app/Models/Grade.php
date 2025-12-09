@@ -14,4 +14,10 @@ class Grade extends Model
     public function classrooms() {
         return $this->hasMany(Classroom::class);
     }
+    public function teachers()
+{
+    return $this->belongsToMany(Teacher::class, 'teacher_grade'); // specify actual table
+}
+
+
 }

@@ -7,7 +7,7 @@
 @endpush
 @section('content')
     @push('page_header_title')
-        Student
+        <i class="bi bi-people me-2"></i>Student Management
     @endpush
 
 

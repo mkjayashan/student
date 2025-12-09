@@ -9,8 +9,14 @@ use Illuminate\Http\Request;
 
 class GradeController extends Controller
 {
-    public function index() {
-        $grades = Grade::all();
+    public function index(Request $request) {
+
+        $search = $request->input('search');
+
+        $grades = Grade::when($search, function ($query) use ($search) {
+            return $query->where('grade_name', 'LIKE', "%{$search}%")
+                ->orWhere('grade_code', 'LIKE', "%{$search}%");
+        })->get();
         return view('grade.index', compact('grades'));
     }
     public function store(Request $request)

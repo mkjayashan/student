@@ -7,6 +7,7 @@ use App\Http\Controllers\GradeController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\DashboardController;
 use App\Livewire\CourseForm;
 use App\Livewire\CreateCourse;
 use App\Livewire\CreateSubject;
@@ -23,7 +24,7 @@ use Vtiful\Kernel\Excel;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/',[StudentController::class,'dashboard'])->name('student.dashboard');
+Route::get('/index', [DashboardController::class, 'index'])->name('dashboard.index');
 
 
 Route::prefix('student')->group(function(){
@@ -35,14 +36,29 @@ Route::prefix('student')->group(function(){
     Route::get('/delete/{id}',[StudentController::class,'delete'])->name('student.delete');
     Route::get('/edit/{id}',[StudentController::class,'edit'])->name('student.edit');
     Route::post('/update',[StudentController::class,'update'])->name('student.update');
+    Route::get('/student/{student}', [StudentController::class, 'show'])->name('student.show');
+    Route::get('/student/export/pdf', [StudentController::class, 'exportPDF'])
+        ->name('student.export.pdf');
+    Route::get('/student/export/csv', [StudentController::class, 'exportCsv'])->name('student.export.csv');
+    Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
+
 
 
 });
 Route::prefix('teacher')->group(function(){
-    Route::get('/teacher',[TeacherController::class,'index'])->name('teacher.index');
-    Route::post('/teacher/store', [CourseController::class, 'store'])->name('teacher.store');
+     Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.index');
+    Route::post('/teacher/store', [TeacherController::class, 'store'])->name('teacher.store');
+    Route::delete('teacher/delete/{id}', [TeacherController::class, 'delete'])->name('teacher.delete');
+Route::get('teacher/edit/{id}', [TeacherController::class, 'edit'])->name('teacher.edit');
+Route::put('teacher/update/{id}', [TeacherController::class, 'update'])->name('teacher.update');
+Route::get('/teacher/export/pdf', [TeacherController::class, 'exportPdf'])->name('teacher.export.pdf');
+Route::get('/teacher/export/csv', [TeacherController::class, 'exportCsv'])->name('teacher.export.csv');
+    Route::post('/teachers/import', [TeacherController::class, 'import'])->name('teachers.import');
+
 
 });
+
+
 Route::prefix('course')->group(function(){
     Route::get('/course', [CourseController::class, 'index'])->name('course.index');
     Route::post('/course/store', [CourseController::class, 'store'])->name('course.store');
@@ -70,6 +86,9 @@ Route::prefix('subject')->group(function(){
     Route::get('/export/csv', [SubjectController::class, 'exportCSV'])->name('subject.export.csv');
     Route::post('/subjects/import', [SubjectController::class, 'import'])->name('subjects.import');
 
+
+Route::get('/subjects', [SubjectController::class, 'getSubjects']);
+
 });
 
 
@@ -90,8 +109,13 @@ Route::prefix('class')->group(function(){
     Route::put('/class/update/{id}', [ClassController::class, 'update'])->name('class.update');
 
     Route::delete('/class/{id}', [ClassController::class, 'delete'])->name('class.delete');
+  Route::post('/import', [ClassController::class, 'import'])->name('classes.import');
+    Route::get('/export/csv', [ClassController::class, 'exportCsv'])->name('class.export.csv');
+    Route::get('/export/pdf', [ClassController::class, 'exportPdf'])->name('class.export.pdf');
 
+   
 });
+
 
 
 

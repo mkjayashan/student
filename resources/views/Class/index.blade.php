@@ -7,7 +7,7 @@
 @endpush
 @section('content')
     @push('page_header_title')
-        Class
+        <i class="bi bi-building me-2"></i>Class Management
     @endpush
     @livewire('create-class')
     @include('livewire.class-list')

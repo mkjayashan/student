@@ -24,6 +24,7 @@ class SubjectController extends Controller
         return view('subject.index', compact('subjects'));
     }
 
+    
     public function exportPDF(Request $request)
     {
         $search = $request->input('search');

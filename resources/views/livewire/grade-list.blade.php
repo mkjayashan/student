@@ -14,10 +14,15 @@
         </div>
         <div class="row">
 
-
+        <form action="{{ route('grade.index') }}" method="GET">
+            <input type="text" id="gradeSearch" name="search"
+                   value="{{ request('search') }}"
+                   class="form-control mb-3"
+                   placeholder="Search Grades">
+        </form>
             <table class="table">
                 <thead>
-                <tr>
+                <tr class="table-dark">
                     <th scope="col">Grade Code</th>
                     <th scope="col">Grade Name</th>
                     <th scope="col">Action</th>
@@ -31,7 +36,7 @@
                         <td>{{$grade->grade_name}}</td>
                         <td>
                             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#gradeUpdateModal{{ $grade->id }}">
-                                update
+                                <i class="bi bi-pencil-square"></i>
                             </button>
 
                             <div class="modal fade" id="gradeUpdateModal{{ $grade->id }}" tabindex="-1" aria-labelledby="gradeUpdateModalLabel" aria-hidden="true">
@@ -72,7 +77,7 @@
 
 
                                                 <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                    <button type="submit" class="btn btn-primary">update</button>
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                 </div>
                                             </form>
@@ -84,13 +89,38 @@
                             </div>
 
                             <button class="btn btn-danger btn-sm" onclick="deleteGrade({{ $grade->id }})">
-                                Delete
+                                <i class="bi bi-trash"></i>
                             </button>
 
                             <form id="delete-form-{{ $grade->id }}" action="{{ route('grade.delete', $grade->id) }}" method="POST" style="display: none;">
                                 @csrf
                                 @method('DELETE')
                             </form>
+<button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#gradeViewModal{{ $grade->id }}">
+        <i class="bi bi-eye-fill"></i>
+    </button>
+    <!-- View Modal -->
+<div class="modal fade" id="gradeViewModal{{ $grade->id }}" tabindex="-1" aria-labelledby="gradeViewModalLabel{{ $grade->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="gradeViewModalLabel{{ $grade->id }}">Grade Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p><strong>Grade Code:</strong> {{ $grade->grade_code }}</p>
+                <p><strong>Grade Name:</strong> {{ $grade->grade_name }}</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
 
                         </td>
                     </tr>
@@ -104,6 +134,19 @@
 
         </div>
         @push('script')
+
+        <script>
+            document.getElementById('gradeSearch').addEventListener('keyup', function() {
+                let value = this.value.toLowerCase();
+                let rows = document.querySelectorAll('table tbody tr');
+
+                rows.forEach(row => {
+                    row.style.display =
+                        row.textContent.toLowerCase().includes(value)
+                            ? '' : 'none';
+                });
+            });
+        </script>
             <script>
                 function deleteGrade(id) {
                     Swal.fire({

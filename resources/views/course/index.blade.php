@@ -7,48 +7,53 @@
 @endpush
 @section('content')
     @push('page_header_title')
-        Courses
+        Course Management
     @endpush
 
-    <div class="container">
-        <div class="row">
-            <div class="col-8">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCourseModal">
-                    Add New Course
-                </button>
-            </div>
-            <div class="col-4">
-                <form action="" id="exportForm" method="GET">
-                    <select id="exportType" class="form-select" style="width:200px; padding:10px; border:2px solid #4CAF50;
-               border-radius:6px; background:#e8ffe8; color:#333;">
-                        <option value="">Export</option>
-                        <option value="pdf">Export as PDF</option>
-                        <option value="excel">Export as Excel</option>
-                    </select>
-                </form>
-
-                <form action="{{ route('courses.import') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <input type="file" name="import_file" accept=".csv,.pdf" required>
-                    <button type="submit">Import</button>
-                </form>
-
-            </div>
+    <div class="container mt-2">
+        <div class="row mt-5">
+    <!-- Add Course Button -->
+    <div class="col-6">
+        <div class="mb-3 d-flex">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCourseModal">
+                + Add New Course
+            </button>
         </div>
+    </div>
+
+    <!-- Import and Export -->
+    <div class="col-6">
+        <div class="mb-3 d-flex justify-content-end align-items-center gap-2">
+            <!-- Import CSV Form -->
+            <form action="{{ route('courses.import') }}" method="POST" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
+                @csrf
+                <input type="file" name="import_file" accept=".csv,.pdf" required class="form-control" style="height: 40px;">
+                <button type="submit" class="btn btn-danger" style="height: 40px; min-width: 120px;">Import</button>
+            </form>
+
+            <!-- Export Dropdown -->
+            <form id="exportForm" method="GET" class="d-flex align-items-center">
+                <select id="exportType" class="form-select" style="height: 40px; min-width: 120px; border:2px solid #28a745; border-radius:6px; color: #28a745; font-weight: 500;">
+                    <option value="">Export</option>
+                    <option value="pdf">Export as PDF</option>
+                    <option value="csv">Export as CSV</option>
+                </select>
+            </form>
+        </div>
+    </div>
+</div>
     </div>
 
 
 
 
 
-    {{--
-        <a href="{{ route('course.export.excel') }}" class="btn btn-success">Export Excel</a>
-    --}}
+    
 
-<br>
+
     @livewire('course-form')
-<br>
-    <div class="container">
+
+    <div class="row mt-0">
 
              <div class="search">
                  <input type="text" id="courseSearch" name="search" value="{{ request('search') }}" class="form-control mb-3" placeholder="Search Courses">
@@ -61,9 +66,9 @@
 
 
         <!-- Courses Table -->
-        <table id="courseTable" class="table table-bordered mt-3">
+        <table id="courseTable" class="table table-bordered mt-0">
             <thead>
-            <tr>
+            <tr class="table-dark">
 
                 <th>Course Code</th>
                 <th>Course Name</th>
@@ -71,6 +76,9 @@
 
 
                 <th>Subjects</th>
+                <th>Status</th>
+                <th>Course Price</th>
+
                 <th>Action</th>
             </tr>
             </thead>
@@ -89,13 +97,35 @@
                     </td>
 
                     <td>
+                @if($course->status == 'paid')
+                    <span class="badge bg-success">Paid</span>
+                @else
+                    <span class="badge bg-primary">Free</span>
+                @endif
+            </td>
+
+            <!-- Show Price If Paid -->
+            <td>
+                @if($course->status == 'paid')
+                    Rs. {{ number_format($course->price, 2) }}
+                @else
+                    -
+                @endif
+            </td>
+
+
+
+
+                    <td>
                         {{--<button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#updateCourseModal">
-                            update
+                                                <i class="bi bi-pencil-square"></i>
+
                         </button>--}}
                         <button class="btn btn-warning btn-sm"
                                 data-bs-toggle="modal"
                                 data-bs-target="#updateCourseModal{{ $course->id }}">
-                            Edit
+                            <i class="bi bi-pencil-square"></i>
+
                         </button>
                         <div class="modal fade" id="updateCourseModal{{ $course->id }}" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered">
@@ -141,6 +171,28 @@
                                                 @endforeach
                                             </div>
 
+                                            <!-- Status -->
+                                           <!-- Status -->
+<!-- Status -->
+<div class="mb-3">
+    <label>Status</label>
+    <select id="status_{{ $course->id }}" class="form-control statusSelect">
+        <option value="">Select Status</option>
+        <option value="free" {{ $course->status === 'free' ? 'selected' : '' }}>Free</option>
+        <option value="paid" {{ $course->status === 'paid' ? 'selected' : '' }}>Paid</option>
+    </select>
+</div>
+
+<!-- Price -->
+<div class="mb-3" id="priceField_{{ $course->id }}" style="{{ $course->status === 'paid' ? 'display:block;' : 'display:none;' }}">
+    <label>Course Price</label>
+    <input type="number" min="0" name="price" value="{{ $course->price }}" class="form-control">
+</div>
+
+
+                    
+
+
                                         </div>
 
                                         <div class="modal-footer">
@@ -160,8 +212,54 @@
                         <a href="{{ route('course.delete', $course->id) }}"
                            class="btn btn-danger btn-sm"
                            onclick="confirmDelete(event, '{{ route('course.delete', $course->id) }}')">
-                            Delete
+                                                    <i class="bi bi-trash"></i>
+
                         </a>
+                        <!-- View Button -->
+<button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewCourseModal{{ $course->id }}">
+    <i class="bi bi-eye-fill"></i>
+</button>
+
+
+<!-- View Course Modal -->
+<div class="modal fade" id="viewCourseModal{{ $course->id }}" tabindex="-1" aria-labelledby="viewCourseModalLabel{{ $course->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="viewCourseModalLabel{{ $course->id }}">Course Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p><strong>Course Code:</strong> {{ $course->course_code }}</p>
+                <p><strong>Course Name:</strong> {{ $course->course_name }}</p>
+                <p><strong>Subjects:</strong> 
+                    @foreach($course->subjects as $subject)
+                        <span class="badge bg-primary m-1">{{ $subject->subject_name }}</span>
+                    @endforeach
+                </p>
+                <p><strong>Status:</strong> 
+                    @if($course->status === 'paid')
+                        <span class="badge bg-success">Paid</span>
+                    @else
+                        <span class="badge bg-primary">Free</span>
+                    @endif
+                </p>
+                @if($course->status === 'paid')
+                    <p><strong>Price:</strong> Rs. {{ number_format($course->price, 2) }}</p>
+                @endif
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
                     </td>
 
                 </tr>
@@ -207,63 +305,100 @@
     </script>
 
 
+@foreach($courses as $course)
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const subjects_{{ $course->id }} = @json($subjects);
-            const searchInput = document.getElementById('search_subject_{{ $course->id }}');
-            const subjectList = document.getElementById('subjectList_{{ $course->id }}');
-            const selectedContainer = document.getElementById('selectedSubjects_{{ $course->id }}');
+document.addEventListener('DOMContentLoaded', function() {
 
-            // Remove subject
-            selectedContainer.addEventListener('click', function(e){
-                if(e.target.classList.contains('remove-subject')){
-                    e.target.parentElement.remove();
+    // ===== Subject Search & Selection =====
+    function updateSubjectSearch(courseId, subjects) {
+        const searchInput = document.getElementById('search_subject_' + courseId);
+        const subjectList = document.getElementById('subjectList_' + courseId);
+        const selectedContainer = document.getElementById('selectedSubjects_' + courseId);
+
+        // Remove subject when clicking ×
+        selectedContainer.addEventListener('click', function(e){
+            if(e.target.classList.contains('remove-subject')){
+                e.target.parentElement.remove();
+            }
+        });
+
+        searchInput.addEventListener('keyup', function(){
+            const query = this.value.toLowerCase();
+            subjectList.innerHTML = '';
+
+            subjects.forEach(subject => {
+                if([...selectedContainer.querySelectorAll('input[name="subject_ids[]"]')].some(i => i.value == subject.id)) return;
+
+                if(subject.subject_name.toLowerCase().includes(query)){
+                    const div = document.createElement('div');
+                    div.className = 'p-2 border rounded mb-1 bg-light';
+                    div.textContent = subject.subject_name;
+                    div.style.cursor = 'pointer';
+
+                    div.addEventListener('click', () => {
+                        const tag = document.createElement('span');
+                        tag.className = 'badge bg-primary m-1 p-2';
+                        tag.textContent = subject.subject_name;
+
+                        const remove = document.createElement('span');
+                        remove.innerHTML = '&times;';
+                        remove.style.cursor = 'pointer';
+                        remove.classList.add('remove-subject');
+                        tag.appendChild(remove);
+
+                        const hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = 'subject_ids[]';
+                        hiddenInput.value = subject.id;
+                        tag.appendChild(hiddenInput);
+
+                        selectedContainer.appendChild(tag);
+                        div.remove();
+                    });
+
+                    subjectList.appendChild(div);
                 }
             });
-
-            searchInput.addEventListener('keyup', function(){
-                const query = this.value.toLowerCase();
-                subjectList.innerHTML = '';
-
-                subjects_{{ $course->id }}.forEach(subject => {
-                    // skip if already selected
-                    if([...selectedContainer.querySelectorAll('input[name="subject_ids[]"]')].some(i => i.value == subject.id)) return;
-
-                    if(subject.subject_name.toLowerCase().includes(query)){
-                        const div = document.createElement('div');
-                        div.className = 'p-2 border rounded mb-1 bg-light';
-                        div.textContent = subject.subject_name;
-                        div.style.cursor = 'pointer';
-
-                        div.addEventListener('click', () => {
-                            const tag = document.createElement('span');
-                            tag.className = 'badge bg-primary m-1 p-2';
-                            tag.textContent = subject.subject_name;
-
-                            const remove = document.createElement('span');
-                            remove.innerHTML = '&times;';
-                            remove.style.cursor = 'pointer';
-                            remove.classList.add('remove-subject');
-                            tag.appendChild(remove);
-
-                            const hiddenInput = document.createElement('input');
-                            hiddenInput.type = 'hidden';
-                            hiddenInput.name = 'subject_ids[]';
-                            hiddenInput.value = subject.id;
-                            tag.appendChild(hiddenInput);
-
-                            selectedContainer.appendChild(tag);
-                            div.remove();
-                        });
-
-                        subjectList.appendChild(div);
-                    }
-                });
-            });
         });
-    </script>
+    }
 
+    // ===== Status & Price Toggle (Pure JS) =====
+    function updateStatusPriceToggle(courseId) {
+        const statusSelect = document.getElementById('status_' + courseId);
+        const priceField = document.getElementById('priceField_' + courseId);
+        const priceInput = priceField.querySelector('input');
+
+        if(!statusSelect) return;
+
+        statusSelect.addEventListener('change', function() {
+            if (this.value === 'paid') {
+                priceField.style.display = 'block';
+            } else {
+                priceField.style.display = 'none';
+                priceInput.value = ''; // reset price when free
+            }
+        });
+    }
+
+    // ===== Initialize Modals =====
+    // For all courses dynamically, trigger when modal is opened
+    document.querySelectorAll('[id^="updateCourseModal"]').forEach(modalEl => {
+        modalEl.addEventListener('shown.bs.modal', function () {
+            const courseId = this.id.replace('updateCourseModal', '');
+            const subjects = @json($subjects); // pass subjects array from Blade
+            updateSubjectSearch(courseId, subjects);
+            updateStatusPriceToggle(courseId);
+        });
+    });
+
+});
+</script>
+
+
+
+
+@endforeach
 
     <script>
         document.getElementById('courseSearch').addEventListener('keyup', function() {
@@ -287,7 +422,7 @@
                 window.location.href = "{{ route('course.export.pdf') }}?search=" + searchValue;
             }
 
-            if (this.value === 'excel') {
+            if (this.value === 'csv') {
                 window.location.href = "{{ route('course.export.csv') }}?search=" + searchValue;
             }
 

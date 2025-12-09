@@ -37,6 +37,25 @@
                             <div class="mt-3" id="selectedSubjects"></div>
                         </div>
 
+                        <div class="mb-3">
+    <label>Status</label>
+    <select wire:model="status" class="form-control">
+        <option value="">Select Status</option>
+        <option value="free">Free</option>
+        <option value="paid">Paid</option>
+    </select>
+</div>
+
+<!-- Show price only if status = paid -->
+
+<div class="mb-3">
+    <label>Course Price</label>
+    <input type="number" wire:model="price" class="form-control" placeholder="Enter course price">
+</div>
+
+
+
+
 
                         <button type="submit" class="btn btn-success">Save Course</button>
                     </form>

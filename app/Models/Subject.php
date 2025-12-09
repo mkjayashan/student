@@ -13,5 +13,12 @@ class Subject extends Model
         return $this->belongsToMany(Course::class, 'course_subject', 'subject_id', 'course_id');
     }
 
+   public function teachers()
+{
+    return $this->belongsToMany(Teacher::class, 'subject_teacher'); // specify actual table
+}
+
+
+
     use HasFactory;
 }
