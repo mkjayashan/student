@@ -146,41 +146,45 @@ class CourseController extends Controller
         $request->validate([
             'course_name' => 'required|string|max:255',
             'subjects' => 'required|array|min:1',
+            'status' => 'required|in:free,paid',
+            'price' => 'nullable|numeric|required_if:status,paid|min:0'
         ]);
 
-        $course = Course::create(['course_name' => $request->course_name]);
+        $course = Course::create(['course_name' => $request->course_name,
+        'status' => $request->status,
+        'price' => $request->status == 'paid' ? $request->price : null,
+    ]);
         $course->subjects()->attach($request->subjects);
+        
 
         return response()->json(['success' => true, 'message' => 'CourseForm created successfully!']);
     }
 
-    public function edit($id)
-    {
-        $course = Course::findOrFail($id);
-        $subjects = Subject::all();
-
-        return view('course.edit', compact('course', 'subjects'));
-    }
+    
 
 
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'course_code' => 'required',
-            'course_name' => 'required',
-            'subject_ids' => 'required|array',
-        ]);
+{
+    $request->validate([
+        'course_code' => 'required',
+        'course_name' => 'required',
+        'subject_ids' => 'required|array',
+        'status' => 'required|in:free,paid',
+        'price' => 'nullable|numeric|required_if:status,paid|min:0',
+    ]);
 
-        $course = Course::findOrFail($id);
-        $course->course_code = $request->course_code;
-        $course->course_name = $request->course_name;
-        $course->save();
+    $course = Course::findOrFail($id);
+    $course->course_code = $request->course_code;
+    $course->course_name = $request->course_name;
+    $course->status = $request->status;
+    $course->price = $request->status === 'paid' ? $request->price : null;
+    $course->save();
 
-        // Sync selected subjects
-        $course->subjects()->sync($request->subject_ids);
+    $course->subjects()->sync($request->subject_ids);
 
-        return redirect()->back()->with('success', 'Course updated successfully!');
-    }
+    return redirect()->back()->with('success', 'Course updated successfully!');
+}
+
 
 
 

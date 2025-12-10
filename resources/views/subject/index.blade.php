@@ -7,7 +7,7 @@
 @endpush
 @section('content')
     @push('page_header_title')
-        Subject
+        <i class="bi bi-book me-2"></i>Subject Management
     @endpush
 
     @livewire('create-subject')

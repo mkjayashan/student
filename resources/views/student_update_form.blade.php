@@ -38,11 +38,7 @@
                     <input type="date" name="dob" class="form-control" placeholder="date of birth"
                            value="{{$student->dob}}" required>
                 </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" name="password" class="form-control" placeholder="password"
-                           value="{{$student->password}}" required>
-                </div>
+                
 
                 <button type="submit" class="btn btn-warning mt-3 w-75">Update</button>
             </form>

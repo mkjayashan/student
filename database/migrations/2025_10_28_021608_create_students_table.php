@@ -18,9 +18,18 @@ return new class extends Migration
             $table->string('email');
             $table->string('ph_no');
             $table->date('dob');
+            $table->longText('profile_picture')->nullable();
+            $table->longText('nic_front')->nullable();
+            $table->longText('nic_back')->nullable();
+
             $table->string('password');
+             $table->unsignedBigInteger('grade_id')->nullable();
+            $table->unsignedBigInteger('course_id')->nullable();
             $table->timestamps();
         });
+        
+
+
     }
 
     /**

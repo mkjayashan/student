@@ -2,38 +2,38 @@
 
 <div class="container-fluid">
 
-    <div class="row">
-        <!-- Button trigger modal -->
-        <div class="col-10">
-
+<div class="row mt-5">
+    <!-- Add Subject Button -->
+    <div class="col-6 d-flex justify-content-start mb-3 mt-3">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSubject">
             Add Subject
         </button>
-
-
     </div>
-        <div class="col-2">
-            <form action="" id="exportForm" method="GET">
-                <select id="exportType" class="form-select" style="width:200px; padding:10px; border:2px solid #4CAF50;
-               border-radius:6px; background:#e8ffe8; color:#333;">
-                    <option value="">Export</option>
-                    <option value="pdf">Export as PDF</option>
-                    <option value="csv">Export as CSV</option>
 
-
-                </select>
-            </form>
-        </div>
-
-        <form action="{{ route('subjects.import') }}" method="POST" enctype="multipart/form-data">
+    <!-- Import and Export (Right aligned) -->
+    <div class="col-6 d-flex justify-content-end mb-3 mt-3 gap-2">
+        <!-- Import Form -->
+        <form action="{{ route('subjects.import') }}" method="POST" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
             @csrf
-
-            <input type="file" name="import_file" accept=".csv,.pdf" required>
-
-            <button type="submit">Import</button>
+            <input type="file" name="import_file" accept=".csv,.pdf" required class="form-control" style="height: 40px;">
+            <button type="submit" class="btn btn-danger" style="height: 40px; min-width: 120px;">Import</button>
         </form>
 
+        <!-- Export Dropdown -->
+        <form id="exportForm" method="GET" class="d-flex align-items-center">
+            <select id="exportType" class="form-select" style="height: 40px; min-width: 120px; border:2px solid #28a745; border-radius:6px; color: #28a745; font-weight: 500;">
+                <option value="">Export</option>
+                <option value="pdf">Export as PDF</option>
+                <option value="csv">Export as CSV</option>
+            </select>
+        </form>
+        
     </div>
+    
+</div>
+
+</div>
+
 
 
     <div class="row">
@@ -47,7 +47,7 @@
 
         <table class="table">
         <thead>
-        <tr>
+        <tr class="table-dark">
             <th scope="col">Subject Code</th>
             <th scope="col">Subject Name</th>
             <th scope="col">Action</th>
@@ -61,7 +61,7 @@
             <td>{{$subject->subject_name}}</td>
             <td>
                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#subjectUpdateModal{{ $subject->id }}">
-                    update
+                     <i class="bi bi-pencil-square"></i>
                 </button>
 
                 <div class="modal fade" id="subjectUpdateModal{{ $subject->id }}" tabindex="-1" aria-labelledby="subjectUpdateModalLabel" aria-hidden="true">
@@ -114,13 +114,39 @@
                 </div>
 
                 <button class="btn btn-danger btn-sm" onclick="deleteSubject({{ $subject->id }})">
-                    Delete
+                    <i class="bi bi-trash"></i>
                 </button>
 
                 <form id="delete-form-{{ $subject->id }}" action="{{ route('subject.delete', $subject->id) }}" method="POST" style="display: none;">
                     @csrf
                     @method('DELETE')
                 </form>
+<!-- View Button -->
+<button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#subjectViewModal{{ $subject->id }}">
+    <i class="bi bi-eye-fill"></i>
+</button>
+<!-- View Modal -->
+<div class="modal fade" id="subjectViewModal{{ $subject->id }}" tabindex="-1" aria-labelledby="subjectViewModalLabel{{ $subject->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="subjectViewModalLabel{{ $subject->id }}">Subject Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p><strong>Subject Code:</strong> {{ $subject->subject_code }}</p>
+                <p><strong>Subject Name:</strong> {{ $subject->subject_name }}</p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
 
             </td>
         </tr>
