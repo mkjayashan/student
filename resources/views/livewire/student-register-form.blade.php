@@ -43,27 +43,45 @@
                             <input type="date" wire:model="dob" class="form-control">
                             @error('dob') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
+                                       
 
-
-                        <div class="col-md-6 mb-3">
+                     <div class="mb-3">
     <label>Select Grade</label>
-    <select wire:model="grade_id" class="form-control" required>
-        <option value="">Select Grade</option>
+    <select wire:model="selectedGrades" class="form-control" multiple required>
         @foreach($grades as $grade)
-            <option value="{{ $grade->id }}">{{ $grade->grade_name }}</option>
+            <option value="{{ $grade->id }}">
+                {{ $grade->grade_name }}
+            </option>
         @endforeach
     </select>
+
+    @error('selectedGrades')
+        <span class="text-danger">{{ $message }}</span>
+    @enderror
 </div>
 
 
-                            <div class="col-12 mb-3">
+
+
+
+
+
+
+                            <div class="mb-3">
     <label>Select Courses</label>
-    <select wire:model="selected_courses" class="form-control" multiple>
+    <select wire:model="selected_courses" class="form-control" multiple required>
         @foreach($courses as $course)
-            <option value="{{ $course->id }}">{{ $course->course_name }}</option>
+            <option value="{{ $course->id }}">
+                {{ $course->course_name }}
+            </option>
         @endforeach
     </select>
+
+    @error('selected_courses')
+        <span class="text-danger">{{ $message }}</span>
+    @enderror
 </div>
+
 
 <div class="col-md-6 mb-3">
         <label>Profile Picture</label>
@@ -127,14 +145,46 @@
         </div>
     </div>
 
-    <script>
+    
+
+</div>
+@push('scripts')
+<script>
         window.addEventListener('student-added', event => {
             var modal = bootstrap.Modal.getInstance(document.getElementById('addStudentModal'));
             modal.hide();
         });
     </script>
 
-</div>
 
+    
+
+   <script>
+function initGradeSelect() {
+    $('.js-grade-select').select2({
+        placeholder: "Select grades",
+        allowClear: true,
+        width: '100%'
+    }).on('change', function (e) {
+        @this.set('selectedGrades', $(this).val());
+    });
+}
+
+// Initialize on page load
+$(document).ready(function () {
+    initGradeSelect();
+});
+
+// Re-initialize after Livewire updates
+Livewire.hook('message.processed', (message, component) => {
+    initGradeSelect();
+});
+</script>
+
+
+
+
+
+@endpush
 
 

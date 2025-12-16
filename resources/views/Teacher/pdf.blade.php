@@ -33,8 +33,7 @@
                 
                 <th>Subjects</th>
                 <th>Grades</th>
-                <th scope="col">NIC Front</th>
-                                                <th scope="col">NIC Back</th>
+                
             </tr>
         </thead>
         <tbody>
@@ -60,15 +59,7 @@
                     </td>
 
 
-                    <td>
-                          
-            
-            <img src="{{ asset($teacher->nic_front) }}" width= '50' height='50' class="img img-responsive" />
-</td>
-<td>
-<img src="{{ asset($teacher->nic_back) }}" width= '50' height='50' class="img img-responsive" />
-
-</td>
+                    
                 </tr>
             @endforeach
         </tbody>

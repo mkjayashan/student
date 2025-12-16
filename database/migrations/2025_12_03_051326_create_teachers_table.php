@@ -27,6 +27,9 @@ $table->longText('profile_picture')->nullable();
 
 $table->longText('nic_front')->nullable();
             $table->longText('nic_back')->nullable();
+            $table->string('password');
+           
+
             $table->timestamps();
         });
     }

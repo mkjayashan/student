@@ -32,7 +32,7 @@
 
             >
                 <li class="nav-item">
-                    <a href="{{route('dashboard.index')}}" class="nav-link">
+                    <a href="{{ route('admin.dashboard') }}" class="nav-link">
                         <i class="nav-icon bi bi-palette"></i>
                         <p>Dashboard</p>
                     </a>

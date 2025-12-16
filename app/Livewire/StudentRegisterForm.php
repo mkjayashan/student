@@ -23,21 +23,31 @@ class StudentRegisterForm extends Component
 
     public $reg_no,$name,$email,$ph_no,$dob,$password;
     public $student_id;
-    public $grade_id;
+   
     public $profile_picture;
     public $nic_front;
     public $nic_back;
-    public $grades; 
-public $search = '';
+     public $grades = [];
+
+    public $search = '';
     public $courses;
     public $selected_courses = [];
+    
+
     public $students;
+    
+    public $selectedGrades = [];
+
+
+    
+
 
     public function mount()
 {
+     
     $this->courses = Course::all();
             $this->grades = Grade::all();
-        $this->students = Student::with('grade', 'courses')->orderBy('id', 'desc')->get();
+        $this->students = Student::with('grades', 'courses')->orderBy('id', 'desc')->get();
 
 }
     public function render()
@@ -61,9 +71,12 @@ public function submit()
         'email' => 'required|email|unique:students,email',
         'ph_no' => 'required',
         'dob' => 'required|date',
-        'password' => 'required|min:6',
-        'grade_id' => 'required|exists:grades,id',
-                    'profile_picture' => 'nullable|image|max:2048',
+        'password' => 'required|string|min:6',
+        'selected_courses' => 'required|array|min:1',
+
+        
+'selectedGrades' => 'required|array|min:1',                    
+'profile_picture' => 'nullable|image|max:2048',
 
         'nic_front' => 'nullable|image|max:2048',
         'nic_back' => 'nullable|image|max:2048',
@@ -104,13 +117,20 @@ $profilePath=null;
         'email' => $this->email,
         'ph_no' => $this->ph_no,
         'dob' => $this->dob,
-        'grade_id' => $this->grade_id,
+        
             'profile_picture' => $profilePath ? 'storage/'.$profilePath : null,
 
         'nic_front' => $nicFrontPath ? 'storage/'.$nicFrontPath : null,
         'nic_back' => $nicBackPath ? 'storage/'.$nicBackPath : null,
         'password' => Hash::make($this->password),
     ]);
+     if (!empty($this->selectedGrades)) {
+    $student->grades()->attach($this->selectedGrades);
+}
+
+
+
+
 
     // Attach courses if any
     if (!empty($this->selected_courses)) {
@@ -137,7 +157,7 @@ public function clear()
         $this->ph_no = '';
         $this->dob = '';
         $this->password = '';
-        $this->grade_id = '';
+        $this->selectedGrades = [];
         $this->selected_courses = [];
         $this->nic_front = null;
         $this->nic_back = null;

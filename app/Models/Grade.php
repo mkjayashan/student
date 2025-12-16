@@ -18,6 +18,12 @@ class Grade extends Model
 {
     return $this->belongsToMany(Teacher::class, 'teacher_grade'); // specify actual table
 }
+// App\Models\Grade.php
+
+public function students()
+{
+    return $this->belongsToMany(Student::class, 'student_grades');
+}
 
 
 }

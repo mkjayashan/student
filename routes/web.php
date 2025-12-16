@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\GradeController;
@@ -24,10 +26,34 @@ use Vtiful\Kernel\Excel;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/index', [DashboardController::class, 'index'])->name('dashboard.index');
+
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Admin routes
+Route::prefix('admin')->middleware('admin')->group(function() {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+});
+
+
+
+
+
+
 
 
 Route::prefix('student')->group(function(){
+
+
+    // 🔐 PROTECTED ROUTES
+    Route::middleware('student.auth')->group(function () {
+    Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+
+
+});
+
+
 
     Route::get('/register',[StudentController::class,'register'])->name('student.register');
     Route::get('/index',[StudentController::class,'index'])->name('student.index');
@@ -39,13 +65,18 @@ Route::prefix('student')->group(function(){
     Route::get('/student/{student}', [StudentController::class, 'show'])->name('student.show');
     Route::get('/student/export/pdf', [StudentController::class, 'exportPDF'])
         ->name('student.export.pdf');
-    Route::get('/student/export/csv', [StudentController::class, 'exportCsv'])->name('student.export.csv');
+Route::get('/student/export/csv', [StudentController::class, 'exportCsv'])->name('student.export.csv');
     Route::post('/students/import', [StudentController::class, 'import'])->name('students.import');
+
 
 
 
 });
 Route::prefix('teacher')->group(function(){
+ Route::get('/teacher/dashboard', [TeacherController::class, 'dashboard'])->name('teacher.dashboard');
+
+
+
      Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.index');
     Route::post('/teacher/store', [TeacherController::class, 'store'])->name('teacher.store');
     Route::delete('teacher/delete/{id}', [TeacherController::class, 'delete'])->name('teacher.delete');

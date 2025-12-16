@@ -7,10 +7,14 @@ use App\Models\Course;
 use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\Subject;
+
+
+use App\Models\Grade;
+
 use Illuminate\Support\Facades\Hash;
 
    // <-- add this
-use App\Models\Grade;
+
 use Smalot\PdfParser\Parser;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -51,6 +55,7 @@ class TeacherController extends Controller
         'phone_no' => 'nullable|string|max:15',
         'subjects' => 'required|array|min:1',
         'grades' => 'required|array|min:1',
+        'password' => 'required|string|min:6',
     ]);
 
     // Create teacher ONLY with teacher table fields
@@ -61,13 +66,14 @@ class TeacherController extends Controller
         'nic' => $validatedData['nic'],
         'address' => $validatedData['address'],
         'phone_no' => $validatedData['phone_no'],
+        'password' => Hash::make($validatedData['password']),
     ]);
 
     // Attach subjects
-    $teacher->subjects()->attach($validatedData['subjects']);
+    $teacher->subjects()->sync($validatedData['subjects']);
 
     // Attach grades
-    $teacher->grades()->attach($validatedData['grades']);
+    $teacher->grades()->sync($validatedData['grades']);
 
     return redirect()->back()->with('success', 'Teacher registered successfully!');
 }
@@ -258,7 +264,18 @@ public function delete($id)
     // Redirect back with success message
     return redirect()->back()->with('success', 'Teacher deleted successfully!');
 }
+public function dashboard()
+    {
+        // You can return a view for teacher dashboard
+        return view('Teacher.dashboard', [
+        'studentsCount' => Student::count(),
+        'teachersCount' => Teacher::count(),
+        'coursesCount'  => Course::count(),
+        'gradesCount'   => Grade::count(),
+        'subjectsCount' => Subject::count(),
+    ]);
 
+    }
 
 
 

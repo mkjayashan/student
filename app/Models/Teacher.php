@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-
-class Teacher extends Model
+class Teacher extends Authenticatable
 {
     use HasFactory;
       protected $fillable = [
@@ -16,12 +16,20 @@ class Teacher extends Model
         'nic',
         'address',
         'phone_no',
+        'password',
+        'password_confirmation',
 'grade_id',
 'subject_id',
 'profile_picture',
         'nic_front', 'nic_back'
         
     ];
+     protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+
     public function grades()
 {
     return $this->belongsToMany(Grade::class, 'teacher_grade'); // specify actual table

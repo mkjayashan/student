@@ -31,8 +31,7 @@
                 <th>Date of Birth</th>
                 <th>Grades</th>
                 <th>Courses</th>
-                <th scope="col">NIC Front</th>
-                                                <th scope="col">NIC Back</th>
+                
             </tr>
         </thead>
         <tbody>
@@ -44,12 +43,15 @@
                     <td>{{ $student->ph_no }}</td>
                     <td>{{$student->dob}}</td>
                             <td>
-    @if($student->grade)
-        {{ $student->grade->grade_name }}
+    @if($student->grades->count() > 0)
+        @foreach($student->grades as $grade)
+            <span style="margin: 5px">{{ $grade->grade_name }}</span>
+        @endforeach
     @else
         <span class="text-danger">No Grade Assigned</span>
     @endif
 </td>
+
 
 
 
@@ -64,15 +66,7 @@
                 @endif
             </td>
 
-            <td>
-                          
             
-            <img src="{{ asset($student->nic_front) }}" width= '50' height='50' class="img img-responsive" />
-</td>
-<td>
-<img src="{{ asset($student->nic_back) }}" width= '50' height='50' class="img img-responsive" />
-
-</td>
                 </tr>
             @endforeach
         </tbody>

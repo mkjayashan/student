@@ -49,16 +49,29 @@
     <input type="text" wire:model.debounce.300ms="phone_no" class="form-control">
     @error('phone_no') <span class="text-danger">{{ $message }}</span> @enderror
 </div>
+<div class="col-md-6 mb-3">
+    <label>Password</label>
+    <input type="password" wire:model.debounce.300ms="password" class="form-control">
+    @error('password') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
+<div class="col-md-6 mb-3">
+    <label>Confirm Password</label>
+    <input type="password" wire:model.defer="password_confirmation" class="form-control">
+    @error('password_confirmation') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
 
 
                             <div class="col-md-6 mb-3">
-                                <label>Subjects</label>
-                                <select wire:model="selected_subjects" multiple class="form-control">
-                                    @foreach($subjects as $subject)
-                                        <option value="{{ $subject->id }}">{{ $subject->subject_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+    <label>Subjects</label>
+    <select wire:model="selected_subjects" multiple class="form-control">
+        @foreach($subjects as $subject)
+            <option value="{{ $subject->id }}">{{ $subject->subject_name }}</option>
+        @endforeach
+    </select>
+    @error('selected_subjects') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
 
                             <div class="col-md-6 mb-3">
                                 <label>Grades</label>
@@ -135,6 +148,56 @@
         location.reload();
     });
 </script>
+@push('script')
+    <script>
+        window.addEventListener('close-modal', () => {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addCourseModal'));
+            modal.hide();
+        });
+
+        const subjects = @json($subjects); // all subjects
+        const searchInput = document.getElementById('search');
+        const subjectList = document.getElementById('subjectList');
+        const selectedContainer = document.getElementById('selectedSubjects');
+
+        searchInput.addEventListener('keyup', function() {
+            const query = this.value.toLowerCase();
+            subjectList.innerHTML = ''; // clear previous
+
+            if(query === "") return; // show nothing initially
+
+            subjects.forEach(subject => {
+                if(subject.subject_name.toLowerCase().includes(query)) {
+                    if(@this.selectedSubjects.includes(subject.id)) return; // skip if already selected
+
+                    const div = document.createElement('div');
+                    div.className = 'subject-item p-2 border mb-1 rounded';
+                    div.textContent = subject.subject_name;
+                    div.setAttribute('data-id', subject.id);
+
+                    div.addEventListener('click', function() {
+                        const id = subject.id;
+                        const name = subject.subject_name;
+
+                        // Add to Livewire property
+                    @this.selectedSubjects.push(id);
+
+                        // Display tag
+                        const tag = document.createElement('span');
+                        tag.className = 'badge bg-primary m-1 p-2';
+                        tag.textContent = name;
+                        selectedContainer.appendChild(tag);
+
+                        // Remove from search list
+                        div.remove();
+                    });
+
+                    subjectList.appendChild(div);
+                }
+            });
+        });
+    </script>
+    @endpush
 
 
 

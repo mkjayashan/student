@@ -79,6 +79,8 @@
                                                    value="{{ $class->class_name }}" required>
                                         </div>
 
+                                        
+
                                         <div class="mb-3">
                                             <label>Select Grade</label>
                                             <select name="grade_id" class="form-control" required>

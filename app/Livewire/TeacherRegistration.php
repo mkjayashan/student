@@ -3,7 +3,7 @@
 namespace App\Livewire;
 use Livewire\WithFileUploads;
 
-
+use Illuminate\Support\Facades\Hash;
 use App\Models\Teacher;
 use App\Models\Subject;
 use App\Models\Grade;
@@ -28,6 +28,9 @@ class TeacherRegistration extends Component
     public $profile_picture;
     public $nic_front;
     public $nic_back;
+    public $password;
+    public $password_confirmation;
+
 
     
 
@@ -52,6 +55,7 @@ class TeacherRegistration extends Component
     'profile_picture' => 'nullable|image|max:2048',
     'nic_front' => 'nullable|image|max:2048',
     'nic_back' => 'nullable|image|max:2048',
+    'password' => 'required|string|min:6|confirmed',
 ]);
 
           $nicFrontPath = null;
@@ -92,7 +96,7 @@ $profilePath = null;
             'address' => $this->address,
             'phone_no' => $this->phone_no,
                 'profile_picture' => $profilePath ? 'storage/'.$profilePath : null,
-
+             'password' => Hash::make($this->password),
             'nic_front' => $nicFrontPath ? 'storage/'.$nicFrontPath : null,
         'nic_back' => $nicBackPath ? 'storage/'.$nicBackPath : null,
         ]);
@@ -108,7 +112,7 @@ $profilePath = null;
 
         $this->reset([
             'reg_no', 'teacher_name', 'email', 'nic', 'address', 'phone_no',
-            'selected_grades', 'selected_subjects'
+            'selected_grades', 'selected_subjects', 'password', 'password_confirmation'
         ]);
     }
 

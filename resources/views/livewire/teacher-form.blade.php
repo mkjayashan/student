@@ -81,14 +81,14 @@
                     <td>{{ $teacher->phone_no }}</td>
                     <td>
                         @forelse($teacher->subjects as $subject)
-                            <span>{{ $subject->subject_name }}</span>
+                            <span class="badge bg-success m-1">{{ $subject->subject_name }}</span>
                         @empty
-                            <span class="text-danger">No Subject Assigned</span>
+                            <span class="badge bg-success m-1">No Subject Assigned</span>
                         @endforelse
                     </td>
                     <td>
                         @foreach($teacher->grades as $grade)
-                            <span >{{ $grade->grade_name }}</span>
+                            <span class="badge bg-success m-1">{{ $grade->grade_name }}</span>
                         @endforeach
                     </td>
 
@@ -122,7 +122,22 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
+
                 <div class="row">
+
+                <div class="row justify-content-center text-center mb-3">
+        <!-- Profile Picture -->
+        <div class="col-md-12">
+            <strong>Profile Picture:</strong><br>
+            @if($teacher->profile_picture)
+                <img src="{{ asset($teacher->profile_picture) }}" 
+                     width="120" height="120"
+                     class="rounded-circle shadow mt-2">
+            @else
+                <span class="text-danger mt-2">Not uploaded</span>
+            @endif
+        </div>
+    </div>
                     <div class="col-md-6 mb-3">
                         <strong>Teacher ID:</strong> {{ $teacher->reg_no }}
                     </div>
@@ -173,14 +188,7 @@
                             <span class="text-danger">Not uploaded</span>
                         @endif
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <strong>Profile Picture:</strong>
-                        @if($teacher->profile_picture)
-                            <img src="{{ asset($teacher->profile_picture) }}" width="100" class="img-thumbnail">
-                        @else
-                            <span class="text-danger">Not uploaded</span>
-                        @endif
-                    </div>
+                    
                 </div>
             </div>
             <div class="modal-footer">

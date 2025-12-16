@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-class Student extends Model
+use Illuminate\Foundation\Auth\User as Authenticatable;
+class Student extends Authenticatable
 {
     use HasFactory;
     protected $fillable = [
@@ -24,12 +24,14 @@ class Student extends Model
     ];
 
     
-public function courses() {
-    return $this->belongsToMany(Course::class);
-}
-public function grade()
+public function courses()
 {
-    return $this->belongsTo(Grade::class);
+    return $this->belongsToMany(Course::class, 'student_courses');
+}
+
+public function grades()
+{
+    return $this->belongsToMany(Grade::class, 'student_grades');
 }
 
 

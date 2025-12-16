@@ -74,25 +74,23 @@
                             <td>{{$student->ph_no}}</td>
                             <td>{{$student->dob}}</td>
                             <td>
-    @if($student->grade)
-        {{ $student->grade->grade_name }}
+    @if($student->grades->count() > 0)
+        {{ $student->grades->pluck('grade_name')->implode(', ') }}
     @else
-        <span class="text-danger">No Grade Assigned</span>
+        <span class="badge bg-success">No Grade Assigned</span>
     @endif
 </td>
 
 
 
                             <td>
-                @if($student->courses->count() > 0)
-                    @foreach($student->courses as $course)
-                       <span style="margin: 5px">{{ $course->course_name }}</span>
+    @if($student->courses->count() > 0)
+        {{ $student->courses->pluck('course_name')->implode(', ') }}
+    @else
+        <span class="badge bg-success ">No Courses Assigned</span>
+    @endif
+</td>
 
-                    @endforeach
-                @else
-                    <span class="text-danger">No Courses Assigned</span>
-                @endif
-            </td>
 
             
 
@@ -103,14 +101,16 @@
 
 
                             <td>
+
+                            <div class="d-flex gap-1 justify-content-center">
                                 <!-- Delete Button -->
                                 <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal{{ $student->id }}">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
 
                                 <!-- Modal -->
-                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal{{ $student->id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ $student->id }}" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -158,30 +158,42 @@
                                                         <input type="password" name="password" class="form-control" value="{{ $student->password }}" required>
                                                     </div>
 
-                                                    <div class="form-group mb-3 col-md-6">
-                <label>Select Grade</label>
-                <select name="grade_id" class="form-control" required>
-                    <option value="">Select Grade</option>
-                    @foreach($grades as $grade)
-                        <option value="{{ $grade->id }}" {{ $student->grade_id == $grade->id ? 'selected' : '' }}>
-                            {{ $grade->grade_name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+                                                    <!-- Grades Selection -->
+<div class="form-group mb-3 col-md-6">
+    <label>Select Grades</label>
+    <select name="selectedGrades[]" class="form-control" multiple required>
+        @foreach($grades as $grade)
+            <option value="{{ $grade->id }}"
+                {{ $student->grades->pluck('id')->contains($grade->id) ? 'selected' : '' }}>
+                {{ $grade->grade_name }}
+            </option>
+        @endforeach
+    </select>
+    
+</div>
 
-            <!-- Course Selection -->
+<!-- Courses Selection -->
+<div class="form-group mb-3 col-md-6">
+    <label>Select Courses</label>
+    <select name="selected_courses[]" class="form-control" multiple required>
+        @foreach($courses as $course)
+            <option value="{{ $course->id }}"
+                {{ $student->courses->pluck('id')->contains($course->id) ? 'selected' : '' }}>
+                {{ $course->course_name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
             <div class="form-group mb-3 col-md-6">
-                <label>Select Course</label>
-                <select name="course_id" class="form-control" required>
-                    <option value="">Select Course</option>
-                    @foreach($courses as $course)
-                        <option value="{{ $course->id }}" {{ $student->course_id == $course->id ? 'selected' : '' }}>
-                            {{ $course->course_name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+    <label>Profile Picture</label>
+    <input type="file" name="profile_picture" class="form-control">
+    @if($student->profile_picture)
+        <img src="{{ asset($student->profile_picture) }}" width="80" class="mt-2">
+    @else
+        <span class="text-danger mt-2">Not uploaded</span>
+    @endif
+</div>
 
             <!-- NIC Front Upload -->
             <div class="form-group mb-3 col-md-6">
@@ -235,72 +247,81 @@
             </div>
 
             <div class="modal-body">
+    <div class="row justify-content-center text-center mb-3">
+        <!-- Profile Picture -->
+        <div class="col-md-12">
+            <strong>Profile Picture:</strong><br>
+            @if($student->profile_picture)
+                <img src="{{ asset($student->profile_picture) }}" 
+                     width="120" height="120"
+                     class="rounded-circle shadow mt-2">
+            @else
+                <span class="text-danger mt-2">Not uploaded</span>
+            @endif
+        </div>
+    </div>
 
-                <div class="row">
+    <div class="row">
 
-                    <div class="col-md-6 mb-2">
-                        <strong>Register No:</strong>
-                        <p>{{ $student->reg_no }}</p>
-                    </div>
+        <div class="col-md-6 mb-2">
+            <strong>Register No:</strong>
+            <p>{{ $student->reg_no }}</p>
+        </div>
 
-                    <div class="col-md-6 mb-2">
-                        <strong>Full Name:</strong>
-                        <p>{{ $student->name }}</p>
-                    </div>
+        <div class="col-md-6 mb-2">
+            <strong>Full Name:</strong>
+            <p>{{ $student->name }}</p>
+        </div>
 
-                    <div class="col-md-6 mb-2">
-                        <strong>Email:</strong>
-                        <p>{{ $student->email }}</p>
-                    </div>
+        <div class="col-md-6 mb-2">
+            <strong>Email:</strong>
+            <p>{{ $student->email }}</p>
+        </div>
 
-                    <div class="col-md-6 mb-2">
-                        <strong>Phone No:</strong>
-                        <p>{{ $student->ph_no }}</p>
-                    </div>
+        <div class="col-md-6 mb-2">
+            <strong>Phone No:</strong>
+            <p>{{ $student->ph_no }}</p>
+        </div>
 
-                    <div class="col-md-6 mb-2">
-                        <strong>Date of Birth:</strong>
-                        <p>{{ $student->dob }}</p>
-                    </div>
+        <div class="col-md-6 mb-2">
+            <strong>Date of Birth:</strong>
+            <p>{{ $student->dob }}</p>
+        </div>
 
-                    <div class="col-md-6 mb-2">
-                        <strong>Grade:</strong>
-                        <p>{{ $student->grade ? $student->grade->grade_name : 'N/A' }}</p>
-                    </div>
+        <div class="col-md-6 mb-2">
+            <strong>Grade:</strong>
+            <p>
+                @if($student->grades->count() > 0)
+                    {{ $student->grades->pluck('grade_name')->implode(', ') }}
+                @else
+                    <span class="badge bg-success m-1">No Grade Assigned</span>
+                @endif
+            </p>
+        </div>
 
-                    <div class="col-md-12 mb-2">
-                        <strong>Courses:</strong>
-                        <p>
-                            @foreach($student->courses as $course)
-                                <span class="badge bg-success">{{ $course->course_name }}</span>
-                            @endforeach
-                        </p>
-                    </div>
+        <div class="col-md-12 mb-3">
+            <strong>Courses:</strong><br>
+            @foreach($student->courses as $course)
+                <span class="badge bg-success m-1">{{ $course->course_name }}</span>
+            @endforeach
+        </div>
 
-                    <!-- NIC Images -->
-                    <div class="col-md-6 text-center">
-                        <strong>NIC Front</strong><br>
-                        <img src="{{ asset($student->nic_front) }}" width="150"
-                             class="img-thumbnail mt-2">
-                    </div>
+        <!-- NIC Images -->
+        <div class="col-md-6 text-center mb-3">
+            <strong>NIC Front</strong><br>
+            <img src="{{ asset($student->nic_front) }}" width="180" 
+                 class="img-thumbnail mt-2 shadow-sm">
+        </div>
 
-                    <div class="col-md-6 text-center">
-                        <strong>NIC Back</strong><br>
-                        <img src="{{ asset($student->nic_back) }}" width="150"
-                             class="img-thumbnail mt-2">
-                    </div>
-                    <div class="col-md-6 text-center">
-                        <strong>Profile Picture:</strong>
-                        @if($student->profile_picture)
-                            <img src="{{ asset($student->profile_picture) }}" width="100" class="img-thumbnail">
-                        @else
-                            <span class="text-danger">Not uploaded</span>
-                        @endif
-                    </div>
+        <div class="col-md-6 text-center mb-3">
+            <strong>NIC Back</strong><br>
+            <img src="{{ asset($student->nic_back) }}" width="180"
+                 class="img-thumbnail mt-2 shadow-sm">
+        </div>
 
-                </div>
+    </div>
+</div>
 
-            </div>
 
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -312,7 +333,7 @@
 
 
 
-
+</div>
                             </td>
 
 
@@ -393,7 +414,7 @@ document.getElementById('studentSearch').addEventListener('keyup', function() {
                 window.location.href = "{{ route('student.export.pdf') }}?search=" + searchValue;
             }
 
-            if (this.value === 'excel') {
+            if (this.value === 'csv') {
                 window.location.href = "{{ route('student.export.csv') }}?search=" + searchValue;
             }
 
